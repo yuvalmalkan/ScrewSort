@@ -20,9 +20,9 @@ class Camera:
             success, frame = self.capture.read()
             return success, frame
 
-        except Exception():
-            print("failed to grab frame")
-
+        except Exception as e:
+            print(f"failed to grab frame: {e}")
+            return False, None
 
     def stop(self):
         if self.capture:

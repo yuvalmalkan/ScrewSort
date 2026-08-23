@@ -16,7 +16,7 @@ def main():
         while True:
             success, frame = camera.readFrame()
             if not success or frame is None:
-                print("Failed to read frame; exiting...")
+                print("failed to read frame")
                 break
 
             cv2.imshow('Live Camera Feed', frame)

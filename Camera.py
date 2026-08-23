@@ -11,12 +11,18 @@ class Camera:
         if not self.capture.isOpened():
             raise RuntimeError(f"could not open camera {self.camera_id}")
 
-    def read_frame(self):
+
+    def readFrame(self):
         if self.capture is None or not self.capture.isOpened():
             return False, None
-            
-        ret, frame = self.capture.read()
-        return ret, frame
+
+        try:
+            ret, frame = self.capture.read()
+            return ret, frame
+
+        except Exception():
+            print("failed to grab frame")
+
 
     def stop(self):
         if self.capture:

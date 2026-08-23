@@ -17,8 +17,8 @@ class Camera:
             return False, None
 
         try:
-            ret, frame = self.capture.read()
-            return ret, frame
+            success, frame = self.capture.read()
+            return success, frame
 
         except Exception():
             print("failed to grab frame")

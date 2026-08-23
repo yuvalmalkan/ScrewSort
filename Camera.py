@@ -5,3 +5,19 @@ class Camera:
         self.camera_id = camera_id
         self.capture = None
 
+
+    def start(self):
+        self.capture = cv2.VideoCapture(self.camera_id)
+        if not self.capture.isOpened():
+            raise RuntimeError(f"could not open camera {self.camera_id}")
+
+    def read_frame(self):
+        if self.capture is None or not self.capture.isOpened():
+            return False, None
+            
+        ret, frame = self.capture.read()
+        return ret, frame
+
+    def stop(self):
+        if self.capture:
+            self.capture.release()

@@ -18,6 +18,7 @@ class Camera:
 
         try:
             success, frame = self.capture.read()
+            frame = cv2.flip(frame, 1)
             return success, frame
 
         except Exception as e:

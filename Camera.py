@@ -1,3 +1,5 @@
+__author__ = "Yuval Malkan"
+
 import cv2
 
 class Camera:

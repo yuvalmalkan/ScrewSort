@@ -3,7 +3,7 @@ __author__ = "Yuval Malkan"
 import cv2
 import numpy as np
 from Constants import *
-from Stablizer import *
+from Stabilizer import Stabilizer
 
 
 
@@ -79,12 +79,13 @@ def classifyScrew(contour):
 
     length_px, diameter_px = measureScrew(contour)
 
-    ratio = length_px / diameter_px
-    diameter_mm = diameter_px / PIXELS_PER_MM
+
 
     if diameter_px <= 0:
         return {"type": "ERROR", "contour": contour}
         
+    ratio = length_px / diameter_px
+    diameter_mm = diameter_px / PIXELS_PER_MM
 
     if ratio < MIN_LENGTH_TO_DIAMETER_RATIO:
         return {"type": "ERROR", "contour": contour}

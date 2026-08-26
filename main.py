@@ -1,7 +1,6 @@
 __author__ = "Yuval Malkan"
 
 import cv2
-import serial
 from Camera import Camera
 from DetectionTools import *
 import Stabilizer

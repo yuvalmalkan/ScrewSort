@@ -11,6 +11,7 @@ ROI = (440, 160, 400, 400)
 MIN_SCREW_AREA_PX = 500
 MAX_SCREW_AREA_PX = 18000
 
+#true = white background
 INVERT_THRESHOLD = True
 
 #filter out round reflections

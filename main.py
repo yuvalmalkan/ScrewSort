@@ -1,13 +1,15 @@
+__author__ = "Yuval Malkan"
+
 import cv2
 import serial
-
 from Camera import Camera
-from DetectionTools import detectScrew, drawRoi, drawScrewBox, drawScrewType, TypeStabilizer
+from DetectionTools import *
+import Stablizer
 from Constants import CAPTURE_WIDTH_PX, CAPTURE_HEIGHT_PX
 
 def main():
     camera = Camera(1)
-    stabilizer = TypeStabilizer()
+    stabilizer = Stabilizer()
 
     try:
         camera.start()
@@ -26,14 +28,15 @@ def main():
             stable_type = stabilizer.update(raw_type)
 
             frame = drawRoi(frame)
+
             if result is not None:
                 frame = drawScrewBox(frame, result["contour"])
+                
             frame = drawScrewType(frame, stable_type)
 
-            cv2.imshow('Live Camera Feed', frame)
+            cv2.imshow('screw sort', frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
-                print("Exiting...")
                 break
 
     except RuntimeError as e:

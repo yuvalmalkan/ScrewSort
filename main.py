@@ -4,7 +4,7 @@ import cv2
 import serial
 from Camera import Camera
 from DetectionTools import *
-import Stablizer
+import Stabilizer
 from Constants import CAPTURE_WIDTH_PX, CAPTURE_HEIGHT_PX
 
 def main():

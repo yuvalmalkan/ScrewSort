@@ -2,8 +2,6 @@
 CAPTURE_WIDTH_PX = 1280
 CAPTURE_HEIGHT_PX = 720
 
-# Updated based on M3 screw logs
-PIXELS_PER_MM = 12.0
 
 # ---- region of interest (ROI) ----
 ROI = (440, 160, 400, 400)
@@ -19,6 +17,9 @@ MIN_LENGTH_TO_DIAMETER_RATIO = 2.5
 
 STABLE_FRAMES_REQUIRED = 10
 
+# Updated exact calibration for the laptop camera
+PIXELS_PER_MM = 5.8
+
 # ---- screw size classification ----
 DIAMETER_RANGES_MM = {
     "M1": (0.5, 1.5),
@@ -26,5 +27,5 @@ DIAMETER_RANGES_MM = {
     "M3": (2.5, 3.5),
     "M4": (3.5, 4.5),
     "M5": (4.5, 5.5),
-    "M6": (5.5, 7.0), # Added a bit of safety margin for M6
+    "M6": (5.5, 6.5),
 }

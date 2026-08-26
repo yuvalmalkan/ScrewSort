@@ -143,8 +143,13 @@ def drawScrewBox(frame, contour, color=(0, 255, 0)):
 def drawScrewType(frame, screw_type):
     if screw_type is None:
         return frame
-        
-    color = (0, 200, 0) if screw_type != "ERROR" else (0, 0, 255)
-    cv2.putText(frame, screw_type, (40, 80), cv2.FONT_HERSHEY_SIMPLEX, 2.5, color, 5)
-    
+
+    if screw_type == "ERROR":
+        text_color = (0, 0, 255)
+
+    else:
+        text_color = (0, 200, 0)
+
+    cv2.putText(frame, screw_type, (40, 80), cv2.FONT_HERSHEY_SIMPLEX, 2.5, text_color, 5)
+
     return frame

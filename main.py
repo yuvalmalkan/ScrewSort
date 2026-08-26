@@ -9,7 +9,7 @@ from Constants import CAPTURE_WIDTH_PX, CAPTURE_HEIGHT_PX
 
 def main():
     camera = Camera(1)
-    stabilizer = Stabilizer()
+    stabilizer = Stabilizer.Stabilizer()
 
     try:
         camera.start()
@@ -31,7 +31,7 @@ def main():
 
             if result is not None:
                 frame = drawScrewBox(frame, result["contour"])
-                
+
             frame = drawScrewType(frame, stable_type)
 
             cv2.imshow('screw sort', frame)

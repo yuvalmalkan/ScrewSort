@@ -1,3 +1,5 @@
+__author__ = "Yuval Malkan"
+
 import cv2
 
 class Camera:
@@ -18,6 +20,9 @@ class Camera:
 
         try:
             success, frame = self.capture.read()
+            if success and frame is not None:
+                 frame = cv2.flip(frame, 1)
+    
             return success, frame
 
         except Exception as e:

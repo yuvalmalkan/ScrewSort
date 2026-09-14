@@ -7,7 +7,7 @@ import Stabilizer
 from Constants import CAPTURE_WIDTH_PX, CAPTURE_HEIGHT_PX
 
 def main():
-    camera = Camera(1)
+    camera = Camera(0)
     stabilizer = Stabilizer.Stabilizer()
 
     try:

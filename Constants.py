@@ -4,15 +4,15 @@ CAPTURE_WIDTH_PX = 1280
 CAPTURE_HEIGHT_PX = 720
 
 
-#region of interest
-ROI = (440, 160, 400, 400)
+#region of interest x,y,w,h
+ROI = (550, 240, 800, 300)
 
 
 MIN_SCREW_AREA_PX = 500
 MAX_SCREW_AREA_PX = 18000
 
 #true = white background
-INVERT_THRESHOLD = True
+INVERT_THRESHOLD = False
 
 #filter out round reflections
 MIN_LENGTH_TO_DIAMETER_RATIO = 2.5

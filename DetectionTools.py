@@ -31,7 +31,7 @@ def findScrewContour(frame):
         thresh_type = cv2.THRESH_BINARY
 
 
-    _, thresh = cv2.threshold(blurred, 0, 255, thresh_type + cv2.THRESH_OTSU)
+    _, thresh = cv2.threshold(blurred, 100, 255, thresh_type)
 
     
     kernel = np.ones((7, 7), np.uint8)
@@ -74,34 +74,39 @@ def measureScrew(contour):
 
 
 
-
 def classifyScrew(contour):
+    # Extract separate measurements for the head and the threaded body
+    length_px, head_diameter_px, body_diameter_px = measureHeadAndBody(contour)
+    area = cv2.contourArea(contour)
 
-    length_px, diameter_px = measureScrew(contour)
-
-
-
-    if diameter_px <= 0:
-        return {"type": "ERROR", "contour": contour}
+    if body_diameter_px <= 0:
+        return {"type": "ERROR", "contour": contour, "head_px": 0, "body_px": 0}
         
-    ratio = length_px / diameter_px
-    diameter_mm = diameter_px / PIXELS_PER_MM
+    # Calculate ratio and final millimeter diameter based on the body (thread) only
+    ratio = length_px / body_diameter_px
+    diameter_mm = body_diameter_px / PIXELS_PER_MM
+
+    # Logs for classification and calibration
+    print("\n--- Screw Detection Log ---")
+    print(f"Area (px): {area:.1f}")
+    print(f"Length (px): {length_px:.2f} | Head (px): {head_diameter_px:.2f} | Body (px): {body_diameter_px:.2f}")
+    print(f"Current Calculated Thread Diameter (mm): {diameter_mm:.2f}")
+    print(f"Ratio (Length/Body): {ratio:.2f}")
 
     if ratio < MIN_LENGTH_TO_DIAMETER_RATIO:
-        return {"type": "ERROR", "contour": contour}
-
+        print("Status: FAILED (Ratio too small)")
+        return {"type": "ERROR", "contour": contour, "head_px": head_diameter_px, "body_px": body_diameter_px}
 
     for size_name, size_range in DIAMETER_RANGES_MM.items():
         min_diameter = size_range[0]
         max_diameter = size_range[1]
         
         if diameter_mm >= min_diameter and diameter_mm <= max_diameter:
-            return {"type": size_name, "contour": contour}
+            print(f"Status: SUCCESS ({size_name})")
+            return {"type": size_name, "contour": contour, "head_px": head_diameter_px, "body_px": body_diameter_px}
 
-
-    return {"type": "ERROR", "contour": contour}
-
-
+    print("Status: FAILED (No matching size category)")
+    return {"type": "ERROR", "contour": contour, "head_px": head_diameter_px, "body_px": body_diameter_px}
 
 def detectScrew(frame, roi=ROI):
     search_frame, offset = cropToRoi(frame, roi)
@@ -153,3 +158,41 @@ def drawScrewType(frame, screw_type):
     cv2.putText(frame, screw_type, (40, 80), cv2.FONT_HERSHEY_SIMPLEX, 2.5, text_color, 5)
 
     return frame
+
+
+def measureHeadAndBody(contour):
+    x, y, w, h = cv2.boundingRect(contour)
+    length_px = w
+    
+    # Create a black mask matching the bounding box dimensions
+    mask = np.zeros((h, w), dtype=np.uint8)
+    
+    # Shift the contour to the mask's origin and draw it in white
+    shifted_contour = contour - [x, y]
+    cv2.drawContours(mask, [shifted_contour], 0, 255, -1)
+    
+    widths = []
+    
+    # Scan thickness along the X-axis
+    for col in range(w):
+        column_pixels = np.where(mask[:, col] > 0)[0]
+        if len(column_pixels) > 0:
+            width = column_pixels[-1] - column_pixels[0]
+            widths.append(width)
+                
+    if not widths:
+        return 0, 0, 0
+        
+    # The head is the widest part
+    head_diameter_px = max(widths)
+    
+    # Sort widths and take the median of the narrower 70% to isolate the thread
+    widths.sort()
+    thread_widths = widths[:int(len(widths) * 0.7)]
+    
+    if not thread_widths:
+        body_diameter_px = head_diameter_px
+    else:
+        body_diameter_px = np.median(thread_widths)
+        
+    return length_px, head_diameter_px, body_diameter_px

@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+#pictures
+*jpg
+
+
+#mac
+*.DS_STORE
+
+
+.vscode

@@ -227,3 +227,10 @@ __marimo__/
 
 
 .vscode
+
+
+#yolo
+*.pt
+runs
+dataset
+Screw Inspection.v1i.yolov8-obb
